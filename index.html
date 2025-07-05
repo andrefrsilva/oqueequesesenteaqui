@@ -1,307 +1,162 @@
 <!DOCTYPE html>
-
 <html lang="pt">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
   <title># o que é que se sente aqui?</title>
-
   <script src="https://cdn.tailwindcss.com"></script>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-
   <style>
-
     body {
-
       background: black;
-
       color: white;
-
       font-family: 'Helvetica Neue', sans-serif;
-
     }
-
     .emotion-tile {
-
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-
     }
-
     .emotion-tile:hover {
-
       transform: scale(1.05);
-
       box-shadow: 0 0 20px rgba(255,0,0,0.6);
-
       cursor: pointer;
-
     }
-
     .selected {
-
       outline: 4px solid red;
-
       outline-offset: -4px;
-
     }
-
     .gradient-text {
-
       background: linear-gradient(90deg, red, white);
-
       -webkit-background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
     }
-
   </style>
-
 </head>
-
 <body class="flex flex-col items-center justify-center h-screen p-4">
 
   <button id="fullscreenBtn" class="bg-red-600 text-white px-6 py-3 rounded-full shadow hover:bg-red-700 transition text-xl font-bold animate-bounce">
-
     🚀 Entra no modo festival!
-
   </button>
 
-  <div id="fullscreenContainer" class="hidden fixed top-0 left-0 w-full h-full bg-gradient-to-br from-black via-red-900 to-black z-50 p-4 overflow-auto flex flex-col justify-center">
+  <div id="fullscreenContainer" class="hidden fixed inset-0 w-full h-full bg-gradient-to-br from-black via-red-900 to-black z-50 overflow-auto flex flex-col justify-start items-center">
 
-    <h1 class="text-3xl md:text-4xl font-extrabold text-center mb-6 gradient-text">
-
+    <h1 class="text-3xl md:text-4xl font-extrabold text-center mt-6 mb-4 gradient-text">
       # o que é que se sente aqui?
-
     </h1>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center items-center flex-1">
-
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 justify-center items-center w-full max-w-7xl flex-grow">
       <!-- 12 emotion boxes -->
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Feliz">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/sede.jpg?raw=true" alt="Feliz" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Sede">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/sede.jpg?raw=true" alt="Sede" class="rounded-xl mb-2"/>
         <span class="font-bold">Sede</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Ansioso">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/fome.jpg?raw=true" alt="Ansioso" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Fome">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/fome.jpg?raw=true" alt="Fome" class="rounded-xl mb-2"/>
         <span class="font-bold">Fome</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Eufórico">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/triste.jpg?raw=true" alt="Eufórico" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Tristeza">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/triste.jpg?raw=true" alt="Tristeza" class="rounded-xl mb-2"/>
         <span class="font-bold">Tristeza</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Relaxado">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/contente.jpg?raw=true" alt="Relaxado" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Alegria">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/contente.jpg?raw=true" alt="Alegria" class="rounded-xl mb-2"/>
         <span class="font-bold">Alegria</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Cansado">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/contente.jpg?raw=true" alt="Cansado" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Tédio">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/contente.jpg?raw=true" alt="Tédio" class="rounded-xl mb-2"/>
         <span class="font-bold">Tédio</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Irritado">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/euf%C3%B3rico.jpg?raw=true" alt="Irritado" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Euforia">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/euf%C3%B3rico.jpg?raw=true" alt="Euforia" class="rounded-xl mb-2"/>
         <span class="font-bold">Euforia</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Animado">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/ansioso.jpg?raw=true" alt="Animado" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Ansiedade">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/ansioso.jpg?raw=true" alt="Ansiedade" class="rounded-xl mb-2"/>
         <span class="font-bold">Ansiedade</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Frustrado">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/solid%C3%A3o.jpg?raw=true" alt="Frustrado" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Solidão">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/solid%C3%A3o.jpg?raw=true" alt="Solidão" class="rounded-xl mb-2"/>
         <span class="font-bold">Solidão</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Surpreso">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/cansado.jpeg?raw=true" alt="Surpreso" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Cansaço">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/cansado.jpeg?raw=true" alt="Cansaço" class="rounded-xl mb-2"/>
         <span class="font-bold">Cansaço</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Confuso">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/sono.jpg?raw=true" alt="Confuso" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Sono">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/sono.jpg?raw=true" alt="Sono" class="rounded-xl mb-2"/>
         <span class="font-bold">Sono</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Esperançoso">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/bebedeira.jpg?raw=true" alt="Esperançoso" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Bebedeira">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/bebedeira.jpg?raw=true" alt="Bebedeira" class="rounded-xl mb-2"/>
         <span class="font-bold">Bebedeira</span>
-
       </div>
-
-      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Apático">
-
-        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/relaxado.jpg?raw=true" alt="Apático" class="rounded-xl mb-2"/>
-
+      <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Calma">
+        <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/relaxado.jpg?raw=true" alt="Calma" class="rounded-xl mb-2"/>
         <span class="font-bold">Calma</span>
-
       </div>
-
     </div>
 
-    <div class="flex justify-center mt-8">
-
+    <div class="flex justify-center mt-8 mb-8">
       <button id="sendBtn" class="bg-red-600 text-white px-6 py-3 rounded-full shadow hover:bg-red-800 transition text-xl font-bold animate-pulse">
-
         Enviar minhas emoções ❤️
-
       </button>
-
     </div>
 
-    <!-- confirmation -->
-
-    <div id="confirmation" class="hidden absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-90 text-center z-50">
-
+    <div id="confirmation" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-90 text-center z-50">
       <h2 class="text-4xl font-extrabold mb-4">🎉 Emoções enviadas! 🎉</h2>
-
       <p class="text-xl">Obrigado por partilhares as tuas emoções!</p>
-
       <p class="mt-4 text-2xl animate-bounce">💥🤘🎵🔥</p>
-
     </div>
-
   </div>
 
   <script>
-
     const fullscreenBtn = document.getElementById('fullscreenBtn');
-
     const fullscreenContainer = document.getElementById('fullscreenContainer');
-
     const sendBtn = document.getElementById('sendBtn');
-
     const confirmation = document.getElementById('confirmation');
-
     let selectedEmotions = [];
 
     fullscreenBtn.addEventListener('click', () => {
-
       fullscreenContainer.classList.remove('hidden');
-
       if (fullscreenContainer.requestFullscreen) {
-
         fullscreenContainer.requestFullscreen();
-
       } else if (fullscreenContainer.webkitRequestFullscreen) {
-
         fullscreenContainer.webkitRequestFullscreen();
-
       } else if (fullscreenContainer.msRequestFullscreen) {
-
         fullscreenContainer.msRequestFullscreen();
-
       }
-
     });
 
     document.querySelectorAll('.emotion-tile').forEach(tile => {
-
       tile.addEventListener('click', () => {
-
         const emotion = tile.dataset.emotion;
-
         if (selectedEmotions.includes(emotion)) {
-
           selectedEmotions = selectedEmotions.filter(e => e !== emotion);
-
           tile.classList.remove('selected');
-
         } else {
-
           selectedEmotions.push(emotion);
-
           tile.classList.add('selected');
-
         }
-
       });
-
     });
 
     sendBtn.addEventListener('click', () => {
-
       if (selectedEmotions.length === 0) {
-
         alert("Escolhe pelo menos uma emoção!");
-
         return;
-
       }
-
-      // anima
-
       confetti({
-
         particleCount: 200,
-
         spread: 90,
-
         origin: { y: 0.6 }
-
       });
-
       gsap.to(".grid", {opacity:0, duration:0.5});
-
       gsap.to(sendBtn, {opacity:0, duration:0.5});
-
       setTimeout(() => {
-
         confirmation.classList.remove('hidden');
-
         gsap.fromTo("#confirmation", {opacity:0}, {opacity:1, duration:1});
-
       }, 600);
-
     });
-
   </script>
-
 </body>
-
 </html>
