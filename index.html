@@ -4,158 +4,259 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title># o que é que se sente aqui?</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP & Confetti -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <!-- Heatmap.js (só para gerar gradientes, usamos canvas directo) -->
+  <script src="https://unpkg.com/heatmap.js@2.0.5/build/heatmap.min.js"></script>
+
   <style>
-    body {
-      background: black;
-      color: white;
-      font-family: 'Helvetica Neue', sans-serif;
+    html,body{
+      margin:0;min-height:100%;background:#000;color:#fff;
+      font-family:'Helvetica Neue',sans-serif;
     }
-    .emotion-tile {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .emotion-tile{transition:transform .2s ease,box-shadow .2s ease}
+    .emotion-tile:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(255,0,0,.6);cursor:pointer}
+    .selected{outline:4px solid red;outline-offset:-4px}
+    .gradient-text{
+      background:linear-gradient(90deg,red,white);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
     }
-    .emotion-tile:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255,0,0,0.6);
-      cursor: pointer;
-    }
-    .selected {
-      outline: 4px solid red;
-      outline-offset: -4px;
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, red, white);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+
+    /* ---------- HEATMAP ---------- */
+    .heat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+               gap:2rem;width:100%;max-width:1500px;margin-top:2rem}
+    .heat-wrapper{position:relative;width:100%;overflow:hidden}   /* <-- corta excedente */
+    .map-img{display:block;width:100%;height:auto;filter:grayscale(100%)}
+    .heat-canvas{position:absolute;inset:0;pointer-events:none;z-index:1}
+    .emotion-icon{display:block;margin:0 auto 1rem;width:80px;height:80px;border-radius:50%;
+                  object-fit:cover;border:2px solid #fff}
+    h2.title{text-align:center;margin:.25rem 0 .5rem;font-size:1.1rem}
   </style>
 </head>
 <body class="flex flex-col items-center justify-center h-screen p-4">
 
-  <button id="fullscreenBtn" class="bg-red-600 text-white px-6 py-3 rounded-full shadow hover:bg-red-700 transition text-xl font-bold animate-bounce">
+  <!-- ============ ENTRAR NO MODO FESTIVAL ============ -->
+  <button id="fullscreenBtn"
+          class="bg-red-600 text-white px-6 py-3 rounded-full shadow hover:bg-red-700 transition
+                 text-xl font-bold animate-bounce">
     🚀 Entra no modo festival!
   </button>
 
-  <div id="fullscreenContainer" class="hidden fixed inset-0 w-full h-full bg-gradient-to-br from-black via-red-900 to-black z-50 overflow-auto flex flex-col justify-start items-center">
+  <!-- ============ FULLSCREEN CONTAINER ============ -->
+  <div id="fullscreenContainer"
+       class="hidden fixed inset-0 w-full h-full bg-gradient-to-br from-black via-red-900 to-black
+              z-50 overflow-auto flex flex-col justify-start items-center">
 
-    <h1 class="text-3xl md:text-4xl font-extrabold text-center mt-6 mb-4 gradient-text">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-center mt-6 mb-6 gradient-text">
       #OQueÉQueSeSenteAqui?
     </h1>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 justify-center items-center w-full max-w-7xl flex-grow">
-      <!-- 12 emotion boxes -->
+    <!-- GRID DE EMOÇÕES (12 caixas) -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 w-full max-w-7xl flex-grow">
+      <!-- (as mesmas 12 tiles – conteúdo intacto) -->
+      <!-- … copia integral das tuas 12 boxes … -->
+      <!-- Sede -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Sede">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/sede.jpg?raw=true" alt="Sede" class="rounded-xl mb-2"/>
         <span class="font-bold">Sede</span>
       </div>
+      <!-- Fome -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Fome">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/fome.jpg?raw=true" alt="Fome" class="rounded-xl mb-2"/>
         <span class="font-bold">Fome</span>
       </div>
+      <!-- Tristeza -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Tristeza">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/triste.jpg?raw=true" alt="Tristeza" class="rounded-xl mb-2"/>
         <span class="font-bold">Tristeza</span>
       </div>
+      <!-- Alegria -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Alegria">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/contente.jpg?raw=true" alt="Alegria" class="rounded-xl mb-2"/>
         <span class="font-bold">Alegria</span>
       </div>
+      <!-- Tédio -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Tédio">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/contente.jpg?raw=true" alt="Tédio" class="rounded-xl mb-2"/>
         <span class="font-bold">Tédio</span>
       </div>
+      <!-- Euforia -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Euforia">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/euf%C3%B3rico.jpg?raw=true" alt="Euforia" class="rounded-xl mb-2"/>
         <span class="font-bold">Euforia</span>
       </div>
+      <!-- Ansiedade -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Ansiedade">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/ansioso.jpg?raw=true" alt="Ansiedade" class="rounded-xl mb-2"/>
         <span class="font-bold">Ansiedade</span>
       </div>
+      <!-- Solidão -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Solidão">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/solid%C3%A3o.jpg?raw=true" alt="Solidão" class="rounded-xl mb-2"/>
         <span class="font-bold">Solidão</span>
       </div>
+      <!-- Cansaço -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Cansaço">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/cansado.jpeg?raw=true" alt="Cansaço" class="rounded-xl mb-2"/>
         <span class="font-bold">Cansaço</span>
       </div>
+      <!-- Sono -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Sono">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/sono.jpg?raw=true" alt="Sono" class="rounded-xl mb-2"/>
         <span class="font-bold">Sono</span>
       </div>
+      <!-- Bebedeira -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Bebedeira">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/bebedeira.jpg?raw=true" alt="Bebedeira" class="rounded-xl mb-2"/>
         <span class="font-bold">Bebedeira</span>
       </div>
+      <!-- Calma -->
       <div class="emotion-tile flex flex-col items-center justify-center p-3 bg-white text-black rounded-2xl" data-emotion="Calma">
         <img src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/relaxado.jpg?raw=true" alt="Calma" class="rounded-xl mb-2"/>
         <span class="font-bold">Calma</span>
       </div>
     </div>
 
-    <div class="flex justify-center mt-8 mb-8">
-      <button id="sendBtn" class="bg-red-600 text-white px-6 py-3 rounded-full shadow hover:bg-red-800 transition text-xl font-bold animate-pulse">
+    <div class="flex justify-center mt-8 mb-10">
+      <button id="sendBtn"
+              class="bg-red-600 text-white px-6 py-3 rounded-full shadow hover:bg-red-800 transition
+                     text-xl font-bold animate-pulse">
         Enviar minhas emoções ❤️
       </button>
     </div>
 
-    <div id="confirmation" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-90 text-center z-50">
-      <h2 class="text-4xl font-extrabold mb-4">🎉 Emoções enviadas! 🎉</h2>
-      <p class="text-xl">Obrigado por partilhares as tuas emoções!</p>
-      <p class="mt-4 text-2xl animate-bounce">💥🤘🎵🔥</p>
-    </div>
-  </div>
+    <!-- ============ CONFIRMAÇÃO / MAPAS ============ -->
+    <div id="confirmation"
+         class="hidden absolute inset-0 flex flex-col items-center justify-start pt-14 text-center z-50">
+      <h2 class="text-4xl font-extrabold mb-6">🎉 Emoções enviadas! 🎉</h2>
+      <p class="text-xl mb-2">Obrigado por partilhares as tuas emoções!</p>
+      <p class="mb-8 text-2xl animate-bounce">💥🤘🎵🔥</p>
 
+      <!-- GRID COM HEATMAPS -->
+      <div class="heat-grid px-4">
+
+        <!-- Sede -->
+        <div>
+          <h2 class="title">Sede</h2>
+          <img class="emotion-icon"
+               src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/sede.jpg?raw=true" alt="">
+          <div class="heat-wrapper">
+            <img class="map-img" src="https://i.postimg.cc/C1PWk8qj/image.png" alt="">
+            <canvas class="heat-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Fome -->
+        <div>
+          <h2 class="title">Fome</h2>
+          <img class="emotion-icon"
+               src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/fome.jpg?raw=true" alt="">
+          <div class="heat-wrapper">
+            <img class="map-img" src="https://i.postimg.cc/C1PWk8qj/image.png" alt="">
+            <canvas class="heat-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Tristeza -->
+        <div>
+          <h2 class="title">Tristeza</h2>
+          <img class="emotion-icon"
+               src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/triste.jpg?raw=true" alt="">
+          <div class="heat-wrapper">
+            <img class="map-img" src="https://i.postimg.cc/C1PWk8qj/image.png" alt="">
+            <canvas class="heat-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Alegria -->
+        <div>
+          <h2 class="title">Alegria</h2>
+          <img class="emotion-icon"
+               src="https://github.com/andrefrsilva/oqueequesesenteaqui/blob/main/contente.jpg?raw=true" alt="">
+          <div class="heat-wrapper">
+            <img class="map-img" src="https://i.postimg.cc/C1PWk8qj/image.png" alt="">
+            <canvas class="heat-canvas"></canvas>
+          </div>
+        </div>
+      </div><!-- heat-grid -->
+    </div><!-- confirmation -->
+  </div><!-- fullscreenContainer -->
+
+  <!-- ============ SCRIPT ============ -->
   <script>
     const fullscreenBtn = document.getElementById('fullscreenBtn');
-    const fullscreenContainer = document.getElementById('fullscreenContainer');
-    const sendBtn = document.getElementById('sendBtn');
-    const confirmation = document.getElementById('confirmation');
-    let selectedEmotions = [];
+    const fullscreenCont= document.getElementById('fullscreenContainer');
+    const sendBtn       = document.getElementById('sendBtn');
+    const confirmation  = document.getElementById('confirmation');
+    let   selected      = [];
 
-    fullscreenBtn.addEventListener('click', () => {
-      fullscreenContainer.classList.remove('hidden');
-      if (fullscreenContainer.requestFullscreen) {
-        fullscreenContainer.requestFullscreen();
-      } else if (fullscreenContainer.webkitRequestFullscreen) {
-        fullscreenContainer.webkitRequestFullscreen();
-      } else if (fullscreenContainer.msRequestFullscreen) {
-        fullscreenContainer.msRequestFullscreen();
-      }
+    /* FULLSCREEN */
+    fullscreenBtn.addEventListener('click',()=>{
+      fullscreenCont.classList.remove('hidden');
+      if(fullscreenCont.requestFullscreen){fullscreenCont.requestFullscreen();}
+      else if(fullscreenCont.webkitRequestFullscreen){fullscreenCont.webkitRequestFullscreen();}
     });
 
-    document.querySelectorAll('.emotion-tile').forEach(tile => {
-      tile.addEventListener('click', () => {
-        const emotion = tile.dataset.emotion;
-        if (selectedEmotions.includes(emotion)) {
-          selectedEmotions = selectedEmotions.filter(e => e !== emotion);
+    /* SELECÇÃO DE EMOÇÕES */
+    document.querySelectorAll('.emotion-tile').forEach(tile=>{
+      tile.addEventListener('click',()=>{
+        const emo=tile.dataset.emotion;
+        if(selected.includes(emo)){
+          selected=selected.filter(e=>e!==emo);
           tile.classList.remove('selected');
-        } else {
-          selectedEmotions.push(emotion);
+        }else{
+          selected.push(emo);
           tile.classList.add('selected');
         }
       });
     });
 
-    sendBtn.addEventListener('click', () => {
-      if (selectedEmotions.length === 0) {
-        alert("Escolhe pelo menos uma emoção!");
-        return;
-      }
-      confetti({
-        particleCount: 200,
-        spread: 90,
-        origin: { y: 0.6 }
-      });
-      gsap.to(".grid", {opacity:0, duration:0.5});
-      gsap.to(sendBtn, {opacity:0, duration:0.5});
-      setTimeout(() => {
+    /* ENVIAR */
+    sendBtn.addEventListener('click',()=>{
+      if(!selected.length){alert("Escolhe pelo menos uma emoção!");return;}
+      confetti({particleCount:200,spread:90,origin:{y:0.6}});
+      gsap.to(".grid",{opacity:0,duration:0.5});
+      gsap.to(sendBtn,{opacity:0,duration:0.5});
+      setTimeout(()=>{
         confirmation.classList.remove('hidden');
-        gsap.fromTo("#confirmation", {opacity:0}, {opacity:1, duration:1});
-      }, 600);
+        gsap.fromTo(confirmation,{opacity:0},{opacity:1,duration:1,onComplete:initHeatmaps});
+      },600);
+    });
+
+    /* ---------- HEATMAPS ---------- */
+    function rand(min,max){return Math.random()*(max-min)+min;}
+    function paintHeat(canvas){
+      const DPR=window.devicePixelRatio||1;
+      const {width, height}=canvas.parentElement.getBoundingClientRect();
+      canvas.width=width*DPR;canvas.height=height*DPR;
+      canvas.style.width=width+'px';canvas.style.height=height+'px';
+      const ctx=canvas.getContext('2d');ctx.scale(DPR,DPR);ctx.clearRect(0,0,width,height);
+      for(let i=0;i<10;i++){
+        const x=rand(0,width),y=rand(0,height),r=rand(width*0.05,width*0.15);
+        const g=ctx.createRadialGradient(x,y,0,x,y,r);
+        g.addColorStop(0,'rgba(255,0,0,0.8)');
+        g.addColorStop(0.4,'rgba(255,255,0,0.5)');
+        g.addColorStop(1,'rgba(0,0,255,0)');
+        ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);
+      }
+    }
+
+    /* garante que cada mapa só pinta depois da imagem carregar */
+    function initHeatmaps(){
+      document.querySelectorAll('.heat-wrapper').forEach(wrapper=>{
+        const canvas=wrapper.querySelector('.heat-canvas');
+        const img   =wrapper.querySelector('.map-img');
+        const draw  =()=>paintHeat(canvas);
+        if(img.complete) draw(); else img.onload=draw;
+      });
+    }
+    /* refaz ao redimensionar */
+    window.addEventListener('resize',()=>{
+      if(!confirmation.classList.contains('hidden')) initHeatmaps();
     });
   </script>
 </body>
